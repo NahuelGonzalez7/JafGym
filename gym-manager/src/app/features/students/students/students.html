@@ -1,0 +1,63 @@
+<div class="students">
+  <div class="students__list">
+    <div class="list-header">
+      <h1>Alumnos</h1>
+      <div style="display: flex; gap: 8px">
+        <button class="btn-secondary" (click)="toggleInactive()">
+          {{ showInactive ? 'Ocultar inactivos' : 'Ver inactivos' }}
+        </button>
+        <button class="btn-primary" (click)="openForm()">+ Nuevo</button>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <input
+        type="text"
+        [(ngModel)]="search"
+        (ngModelChange)="applyFilter()"
+        placeholder="Buscar por nombre o DNI..."
+        class="search-input"
+      />
+    </div>
+
+    <div class="list-body" *ngIf="!loading">
+      <div
+        class="student-row"
+        *ngFor="let s of filtered"
+        (click)="select(s)"
+        [class.student-row--active]="selected?.id === s.id"
+      >
+        <div class="student-row__info">
+          <span class="student-row__name">{{ s.first_name }} {{ s.last_name }}</span>
+          <span class="inactive-badge" *ngIf="!s.active">Inactivo</span>
+          <span class="student-row__dni">{{ s.dni }}</span>
+        </div>
+
+        <span
+          class="status-dot"
+          [class.status-dot--ok]="s.quota_status === 'ok'"
+          [class.status-dot--warning]="s.quota_status === 'warning'"
+          [class.status-dot--expired]="s.quota_status === 'expired'"
+          [class.status-dot--none]="s.quota_status === 'none'"
+        >
+          {{ statusIcon(s.quota_status) }}
+        </span>
+      </div>
+
+      <div class="empty" *ngIf="filtered.length === 0">No se encontraron alumnos</div>
+    </div>
+
+    <div class="loading" *ngIf="loading">Cargando...</div>
+  </div>
+
+  <div class="students__panel" *ngIf="selected || showForm">
+    <app-student-panel
+      [student]="selected"
+      [isNew]="showForm"
+      (close)="onPanelClose()"
+      (saved)="onStudentSaved()"
+      (deactivated)="onStudentDeactivated()"
+    >
+    </app-student-panel>
+  </div>
+</div>

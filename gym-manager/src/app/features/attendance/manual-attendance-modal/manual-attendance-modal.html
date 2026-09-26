@@ -1,0 +1,76 @@
+<div class="modal-overlay" (click)="close.emit()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <div class="modal__header">
+      <h2>Registrar asistencia</h2>
+      <button class="btn-close" (click)="close.emit()">✕</button>
+    </div>
+
+    <div class="modal__body" *ngIf="!success">
+
+      <!-- Búsqueda -->
+      <div class="field">
+        <label>Buscar alumno</label>
+        <div class="autocomplete">
+          <input
+            type="text"
+            [(ngModel)]="search"
+            (ngModelChange)="searchStudents()"
+            placeholder="Nombre o DNI..."
+            [disabled]="loading"
+          />
+          <div class="dropdown" *ngIf="filtered.length > 0">
+            <div
+              class="dropdown__item"
+              *ngFor="let s of filtered"
+              (click)="selectStudent(s)">
+              <span>{{ s.first_name }} {{ s.last_name }}</span>
+              <small>{{ s.dni }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info del alumno seleccionado -->
+      <div class="student-card" *ngIf="selected">
+        <div class="student-card__avatar">
+          <img *ngIf="selected.photo_url" [src]="selected.photo_url" />
+          <span *ngIf="!selected.photo_url">👤</span>
+        </div>
+        <div class="student-card__info">
+          <span class="student-card__name">
+            {{ selected.first_name }} {{ selected.last_name }}
+          </span>
+          <span class="student-card__dni">DNI: {{ selected.dni }}</span>
+          <span class="quota-badge" [class]="getQuotaClass()">
+            {{ getQuotaLabel() }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Ya ingresó hoy -->
+      <div class="already-in" *ngIf="alreadyIn">
+        ⚠ Este alumno ya registró asistencia hoy
+      </div>
+
+      <!-- Acciones -->
+      <div class="modal__actions" *ngIf="selected">
+        <button
+          class="btn-primary"
+          (click)="register()"
+          [disabled]="loading">
+          {{ loading ? 'Registrando...' : 'Confirmar asistencia' }}
+        </button>
+        <button class="btn-ghost" (click)="close.emit()">Cancelar</button>
+      </div>
+
+    </div>
+
+    <!-- Success state -->
+    <div class="success" *ngIf="success">
+      <span class="success__icon">✓</span>
+      <p>Asistencia registrada</p>
+    </div>
+
+  </div>
+</div>

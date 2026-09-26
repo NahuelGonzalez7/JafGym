@@ -1,0 +1,118 @@
+.app-layout {
+  display: flex;
+  height: 100vh;
+  background: #0A0A0A;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+// ── Sidebar ─────────────────────────────────────────────
+.sidebar {
+  width: 220px;
+  min-width: 220px;
+  background: #141414;
+  border-right: 1px solid #2A2A2A;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 0;
+}
+
+.sidebar__top {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+// ── Brand ───────────────────────────────────────────────
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  text-decoration: none;
+
+  &__icon { font-size: 18px; }
+
+  &__name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #F0F0F0;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+}
+
+// ── Nav ─────────────────────────────────────────────────
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 12px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6B6B6B;
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+
+    &:hover {
+      background: #1C1C1C;
+      color: #ADADAD;
+    }
+
+    &--active {
+      background: #1C1C1C;
+      color: #F0F0F0;
+
+      .nav__icon { color: #D42B2B; }
+    }
+  }
+
+  &__icon {
+    font-size: 15px;
+    width: 18px;
+    text-align: center;
+  }
+}
+
+// ── Kiosk button ────────────────────────────────────────
+.sidebar__bottom {
+  padding: 0 12px;
+}
+
+.kiosk-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #1C1C1C;
+  border: 1px solid #2A2A2A;
+  border-radius: 6px;
+  color: #D42B2B;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+
+  &:hover {
+    background: rgba(212, 43, 43, 0.08);
+    border-color: #D42B2B;
+  }
+}
+
+// ── Main content ────────────────────────────────────────
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px;
+}

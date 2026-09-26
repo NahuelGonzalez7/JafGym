@@ -1,0 +1,49 @@
+<div class="manager">
+
+  <div class="manager__header">
+    <h2>Membresías activas</h2>
+    <button class="btn-primary" (click)="showForm = !showForm">
+      {{ showForm ? 'Cancelar' : '+ Nueva membresía' }}
+    </button>
+  </div>
+
+  <!-- Form nueva membresía -->
+  <div class="new-form" *ngIf="showForm">
+    <div class="form-grid">
+      <div class="field">
+        <label>Nombre *</label>
+        <input type="text" [(ngModel)]="form.name" placeholder="Ej: Mensual" [class.input--error]="errors['name']" />
+        <span class="field-error" *ngIf="errors['name']">{{ errors['name'] }}</span>
+      </div>
+      <div class="field">
+        <label>Precio *</label>
+        <input type="number" [(ngModel)]="form.price" placeholder="0" [class.input--error]="errors['price']" />
+        <span class="field-error" *ngIf="errors['price']">{{ errors['price'] }}</span>
+      </div>
+      <div class="field">
+        <label>Duración (días) *</label>
+        <input type="number" [(ngModel)]="form.duration_days" placeholder="30" [class.input--error]="errors['duration_days']" />
+        <span class="field-error" *ngIf="errors['duration_days']">{{ errors['duration_days'] }}</span>
+      </div>
+    </div>
+    <button class="btn-primary" (click)="save()" [disabled]="loading">
+      {{ loading ? 'Guardando...' : 'Crear membresía' }}
+    </button>
+  </div>
+
+  <!-- Lista -->
+  <div class="membership-list" *ngIf="!loading">
+    <div class="membership-row" *ngFor="let m of memberships">
+      <div class="membership-row__info">
+        <span class="membership-row__name">{{ m.name }}</span>
+        <span class="membership-row__meta">{{ m.duration_days }} días</span>
+      </div>
+      <span class="membership-row__price">${{ m.price | number }}</span>
+      <button class="btn-remove" (click)="deactivate(m.id)">Eliminar</button>
+    </div>
+    <div class="empty" *ngIf="memberships.length === 0">
+      No hay membresías creadas. Creá una para poder registrar pagos.
+    </div>
+  </div>
+
+</div>

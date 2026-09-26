@@ -1,0 +1,89 @@
+<div class="home">
+  <div class="home__header">
+    <div>
+      <h1>{{ getGreeting() }} 👋</h1>
+      <p class="date">{{ formatDate(today) }}</p>
+    </div>
+  </div>
+
+  <div class="cards" *ngIf="!loading">
+    <div class="card card--clickable" routerLink="/students">
+      <span class="card__label">Alumnos activos</span>
+      <span class="card__value">{{ stats.activeStudents }}</span>
+      <span class="card__sub">registrados en total</span>
+    </div>
+
+    <div class="card card--clickable" routerLink="/students">
+      <span class="card__label">Al día</span>
+      <span class="card__value">{{ stats.upToDateStudents }}</span>
+      <span class="card__sub">cuotas vigentes</span>
+    </div>
+
+    <div class="card">
+      <span class="card__label">Ingresos hoy</span>
+      <span class="card__value">{{ stats.totalToday }}</span>
+      <span class="card__sub">personas ingresaron</span>
+    </div>
+
+    <div
+      class="card card--warning card--clickable"
+      routerLink="/students"
+      *ngIf="stats.expiringCount > 0"
+    >
+      <span class="card__label">Por vencer</span>
+      <span class="card__value">{{ stats.expiringCount }}</span>
+      <span class="card__sub">cuotas en 7 días</span>
+    </div>
+
+    <div
+      class="card card--danger card--clickable"
+      routerLink="/students"
+      *ngIf="stats.expiredCount > 0"
+    >
+      <span class="card__label">Vencidas</span>
+      <span class="card__value">{{ stats.expiredCount }}</span>
+      <span class="card__sub">cuotas sin renovar</span>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <button class="action-btn" (click)="showManualModal = true">
+      <span>+</span>
+      <span>Registrar asistencia</span>
+    </button>
+  </div>
+
+  <div class="section" *ngIf="!loading && expiringStudents.length > 0">
+    <h2 class="section__title">Cuotas a atender</h2>
+    <div class="student-list">
+      <div
+        class="student-row"
+        *ngFor="let student of expiringStudents"
+        [class.student-row--expired]="student.daysLeft < 0"
+        [class.student-row--warning]="student.daysLeft >= 0 && student.daysLeft <= 7"
+      >
+        <div class="student-row__info">
+          <span class="student-row__name">{{ student.first_name }} {{ student.last_name }}</span>
+          <span class="student-row__status">{{ getStatusLabel(student.daysLeft) }}</span>
+        </div>
+        <a class="student-row__action" [routerLink]="['/payments']">Renovar →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty" *ngIf="!loading && expiringStudents.length === 0">
+    <span>✓</span>
+    <p>Todas las cuotas están al día</p>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <p>Cargando...</p>
+  </div>
+
+  <app-manual-attendance-modal
+    *ngIf="showManualModal"
+    (close)="showManualModal = false"
+    (registered)="onAttendanceRegistered()"
+  >
+  </app-manual-attendance-modal>
+</div>

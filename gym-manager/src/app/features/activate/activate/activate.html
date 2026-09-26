@@ -1,0 +1,47 @@
+<div class="screen">
+  <div class="card">
+    <div class="card__accent"></div>
+
+    <div class="card__body">
+      <div class="brand">
+        <span class="brand__icon">⚡</span>
+        <span class="brand__name">GymManager</span>
+      </div>
+
+      <div class="heading">
+        <h1>Activar licencia</h1>
+        <p>Ingresá el token proporcionado para habilitar la aplicación.</p>
+      </div>
+
+      <div class="field">
+        <label for="token">Token de licencia</label>
+        <input
+          id="token"
+          type="text"
+          [(ngModel)]="token"
+          placeholder="GYM-XXXXXXXXXXXXXXXX"
+          [disabled]="loading"
+          [class.input--error]="error"
+          (keyup.enter)="activate()"
+        />
+        <span class="field__error" *ngIf="error">{{ error }}</span>
+      </div>
+
+      <button
+        class="btn-activate"
+        (click)="activate()"
+        [disabled]="loading || !token">
+        <span *ngIf="!loading">Activar aplicación</span>
+        <span *ngIf="loading" class="loading">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </span>
+      </button>
+
+      <p class="footer-note">
+        ¿No tenés un token? Contactá a tu proveedor.
+      </p>
+    </div>
+  </div>
+</div>

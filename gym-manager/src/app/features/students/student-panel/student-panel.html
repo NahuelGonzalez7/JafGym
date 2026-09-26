@@ -1,0 +1,143 @@
+<div class="panel">
+  <div class="panel__header">
+    <h2>{{ isNew ? 'Nuevo alumno' : student?.first_name + ' ' + student?.last_name }}</h2>
+    <button class="btn-close" (click)="close.emit()">✕</button>
+  </div>
+
+  <div class="panel__body">
+    <!-- Foto -->
+    <div class="photo-section">
+      <div class="photo-wrap">
+        <img *ngIf="photoPreview" [src]="photoPreview" alt="Foto" class="photo" />
+        <div *ngIf="!photoPreview" class="photo-placeholder">
+          <span>👤</span>
+        </div>
+      </div>
+      <label class="btn-secondary" for="photo-input">
+        {{ photoPreview ? 'Cambiar foto' : 'Subir foto' }}
+      </label>
+      <input
+        id="photo-input"
+        type="file"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        style="display: none"
+      />
+    </div>
+
+    <!-- Estado cuota (solo en edición) -->
+    <div class="quota-badge" [class]="quotaClass()" *ngIf="!isNew">
+      {{ quotaLabel() }}
+    </div>
+
+    <!-- Formulario -->
+    <div class="form-grid">
+      <div class="field">
+        <label>Nombre *</label>
+        <input
+          type="text"
+          [(ngModel)]="form.first_name"
+          placeholder="Juan"
+          [class.input--error]="errors['first_name']"
+        />
+        <span class="field-error" *ngIf="errors['first_name']">
+          {{ errors['first_name'] }}
+        </span>
+      </div>
+
+      <div class="field">
+        <label>Apellido *</label>
+        <input
+          type="text"
+          [(ngModel)]="form.last_name"
+          placeholder="García"
+          [class.input--error]="errors['last_name']"
+        />
+        <span class="field-error" *ngIf="errors['last_name']">
+          {{ errors['last_name'] }}
+        </span>
+      </div>
+
+      <div class="field">
+        <label>DNI * (8 dígitos)</label>
+        <input
+          type="text"
+          [(ngModel)]="form.dni"
+          placeholder="12345678"
+          maxlength="10"
+          [class.input--error]="errors['dni']"
+        />
+        <span class="field-error" *ngIf="errors['dni']">
+          {{ errors['dni'] }}
+        </span>
+      </div>
+
+      <div class="field">
+        <label>Teléfono (máx. 10 dígitos)</label>
+        <input
+          type="text"
+          [(ngModel)]="form.phone"
+          placeholder="1112345678"
+          maxlength="10"
+          [class.input--error]="errors['phone']"
+        />
+        <span class="field-error" *ngIf="errors['phone']">
+          {{ errors['phone'] }}
+        </span>
+      </div>
+
+      <div class="field field--full">
+        <label>Email</label>
+        <input
+          type="text"
+          [(ngModel)]="form.email"
+          placeholder="juan@email.com"
+          [class.input--error]="errors['email']"
+        />
+        <span class="field-error" *ngIf="errors['email']">
+          {{ errors['email'] }}
+        </span>
+      </div>
+
+      <div class="field">
+        <label>Fecha de nacimiento</label>
+        <input type="date" [(ngModel)]="form.birth_date" />
+      </div>
+    </div>
+
+    <div class="panel__actions">
+      <button class="btn-primary" (click)="save()" [disabled]="loading">
+        {{ loading ? 'Guardando...' : isNew ? 'Crear alumno' : 'Guardar cambios' }}
+      </button>
+
+      <!-- Alumno activo: mostrar dar de baja -->
+      <ng-container *ngIf="!isNew && student?.active">
+        <button
+          *ngIf="!confirmDeactivate"
+          class="btn-danger-outline"
+          (click)="confirmDeactivate = true"
+        >
+          Dar de baja
+        </button>
+
+        <div class="confirm-deactivate" *ngIf="confirmDeactivate">
+          <span>¿Confirmás la baja?</span>
+          <button class="btn-danger" (click)="deactivate()" [disabled]="loading">
+            Sí, dar de baja
+          </button>
+          <button class="btn-ghost" (click)="confirmDeactivate = false">Cancelar</button>
+        </div>
+      </ng-container>
+
+      <!-- Alumno inactivo: mostrar reactivar -->
+      <button
+        *ngIf="!isNew && !student?.active"
+        class="btn-reactivate"
+        (click)="reactivate()"
+        [disabled]="loading"
+      >
+        ↑ Reactivar alumno
+      </button>
+    </div>
+  </div>
+</div>

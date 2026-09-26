@@ -1,0 +1,241 @@
+<div class="stats">
+  <div class="stats__header">
+    <h1>Estadísticas</h1>
+  </div>
+
+  <!-- Tabs principales -->
+  <div class="main-tabs">
+    <button
+      class="tab"
+      [class.tab--active]="activeTab === 'summary'"
+      (click)="onTabChange('summary')"
+    >
+      Resumen
+    </button>
+    <button
+      class="tab"
+      [class.tab--active]="activeTab === 'attendance'"
+      (click)="onTabChange('attendance')"
+    >
+      Asistencias
+    </button>
+    <button
+      class="tab"
+      [class.tab--active]="activeTab === 'students'"
+      (click)="onTabChange('students')"
+    >
+      Alumnos
+    </button>
+    <button
+      class="tab"
+      [class.tab--active]="activeTab === 'finance'"
+      (click)="onTabChange('finance')"
+    >
+      Finanzas
+    </button>
+  </div>
+
+  <!-- Selector de período -->
+  <div class="period-bar">
+    <div class="period-tabs">
+      <button
+        class="period-btn"
+        [class.period-btn--active]="period === 'today'"
+        (click)="onPeriodChange('today')"
+      >
+        Hoy
+      </button>
+      <button
+        class="period-btn"
+        [class.period-btn--active]="period === 'week'"
+        (click)="onPeriodChange('week')"
+      >
+        7 días
+      </button>
+      <button
+        class="period-btn"
+        [class.period-btn--active]="period === 'month'"
+        (click)="onPeriodChange('month')"
+      >
+        30 días
+      </button>
+      <button
+        class="period-btn"
+        [class.period-btn--active]="period === 'custom'"
+        (click)="onPeriodChange('custom')"
+      >
+        Personalizado
+      </button>
+    </div>
+
+    <div class="custom-range" *ngIf="period === 'custom'">
+      <input type="date" [(ngModel)]="customFrom" />
+      <span>—</span>
+      <input type="date" [(ngModel)]="customTo" />
+      <button class="btn-apply" (click)="applyCustomRange()">Aplicar</button>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="loading">Cargando...</div>
+
+  <!-- TAB: RESUMEN -->
+  <div *ngIf="!loading && activeTab === 'summary' && summary">
+    <div class="summary-cards">
+      <div class="scard">
+        <span class="scard__label">Asistencias</span>
+        <span class="scard__value">{{ summary.totalAttendances }}</span>
+        <span class="scard__sub">
+          {{ period === 'today' ? periodLabel() : 'en ' + periodLabel() }}
+        </span>
+      </div>
+      <div class="scard">
+        <span class="scard__label">Alumnos únicos</span>
+        <span class="scard__value">{{ summary.uniqueStudents }}</span>
+        <span class="scard__sub">que asistieron</span>
+      </div>
+      <div class="scard">
+        <span class="scard__label">Nuevos alumnos</span>
+        <span class="scard__value">{{ summary.newStudents }}</span>
+        <span class="scard__sub">
+          {{ period === 'today' ? periodLabel() : 'en ' + periodLabel() }}
+        </span>
+      </div>
+      <div class="scard scard--warning" *ngIf="summary.expiringQuotas > 0">
+        <span class="scard__label">Por vencer</span>
+        <span class="scard__value">{{ summary.expiringQuotas }}</span>
+        <span class="scard__sub">cuotas en 7 días</span>
+      </div>
+      <div class="scard scard--danger" *ngIf="summary.expiredQuotas > 0">
+        <span class="scard__label">Vencidas</span>
+        <span class="scard__value">{{ summary.expiredQuotas }}</span>
+        <span class="scard__sub">cuotas sin renovar</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: ASISTENCIAS -->
+  <div *ngIf="!loading && activeTab === 'attendance'">
+    <div class="toolbar">
+      <input
+        type="text"
+        [(ngModel)]="search"
+        (ngModelChange)="load()"
+        placeholder="Buscar por nombre o DNI..."
+        class="search-input"
+      />
+    </div>
+
+    <div class="attendance-table" *ngIf="attendances.length > 0">
+      <div class="table-header">
+        <span>Alumno</span>
+        <span>DNI</span>
+        <span>Fecha y hora</span>
+      </div>
+      <div class="table-row" *ngFor="let a of attendances">
+        <div class="col-student">
+          <div class="avatar">
+            <img *ngIf="a.students?.photo_url" [src]="a.students.photo_url" />
+            <span *ngIf="!a.students?.photo_url">👤</span>
+          </div>
+          <span>{{ a.students?.first_name }} {{ a.students?.last_name }}</span>
+        </div>
+        <span>{{ a.students?.dni }}</span>
+        <span>{{ formatDateTime(a.attended_at) }}</span>
+      </div>
+    </div>
+
+    <div class="empty" *ngIf="attendances.length === 0">
+      No hay asistencias para el período seleccionado
+    </div>
+  </div>
+
+  <!-- TAB: ALUMNOS -->
+  <div *ngIf="!loading && activeTab === 'students' && studentStats">
+    <div class="summary-cards">
+      <div class="scard">
+        <span class="scard__label">Total activos</span>
+        <span class="scard__value">{{ studentStats.all.length }}</span>
+        <span class="scard__sub">alumnos registrados</span>
+      </div>
+      <div class="scard">
+        <span class="scard__label">Nuevos</span>
+        <span class="scard__value">{{ studentStats.newStudents.length }}</span>
+        <span class="scard__sub">
+          {{ period === 'today' ? periodLabel() : 'en ' + periodLabel() }}
+        </span>
+      </div>
+      <div class="scard scard--danger" *ngIf="studentStats.inactive.length > 0">
+        <span class="scard__label">Bajas</span>
+        <span class="scard__value">{{ studentStats.inactive.length }}</span>
+        <span class="scard__sub">alumnos inactivos</span>
+      </div>
+    </div>
+
+    <div class="section-title" *ngIf="studentStats.newStudents.length > 0">
+      Nuevos en {{ periodLabel() }}
+    </div>
+
+    <div class="student-list" *ngIf="studentStats.newStudents.length > 0">
+      <div class="student-row" *ngFor="let s of studentStats.newStudents">
+        <span class="student-row__name">{{ s.first_name }} {{ s.last_name }}</span>
+        <span class="student-row__date">{{ formatDate(s.created_at) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: FINANZAS -->
+  <div *ngIf="!loading && activeTab === 'finance' && financeStats">
+    <div class="summary-cards">
+      <div class="scard">
+        <span class="scard__label">Ingresos totales</span>
+        <span class="scard__value">{{ formatAmount(financeStats.totalIncome) }}</span>
+        <span class="scard__sub">
+          {{ period === 'today' ? periodLabel() : 'en ' + periodLabel() }}
+        </span>
+      </div>
+      <div class="scard">
+        <span class="scard__label">Pagos registrados</span>
+        <span class="scard__value">{{ financeStats.payments.length }}</span>
+        <span class="scard__sub">
+          {{ period === 'today' ? periodLabel() : 'en ' + periodLabel() }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Desglose por membresía -->
+    <div class="section-title" style="margin-top: 24px">Desglose por membresía</div>
+    <div class="membership-breakdown">
+      <div class="breakdown-row" *ngFor="let key of getKeys(financeStats.byMembership)">
+        <span class="breakdown-row__name">{{ key }}</span>
+        <span class="breakdown-row__count"> {{ financeStats.byMembership[key].count }} pagos </span>
+        <span class="breakdown-row__total">
+          {{ formatAmount(financeStats.byMembership[key].total) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Historial de pagos -->
+    <div class="section-title" style="margin-top: 24px">Historial de pagos</div>
+    <div class="attendance-table" *ngIf="financeStats.payments.length > 0">
+      <div class="table-header finance-grid">
+        <span>Alumno</span>
+        <span>Membresía</span>
+        <span>Fecha</span>
+        <span>Monto</span>
+      </div>
+      <div class="table-row finance-grid" *ngFor="let p of financeStats.payments">
+        <span class="col-name">
+          {{ p.students?.first_name }} {{ p.students?.last_name }}
+          <small>{{ p.students?.dni }}</small>
+        </span>
+        <span>{{ p.memberships?.name }}</span>
+        <span>{{ formatDate(p.paid_at) }}</span>
+        <span class="col-amount">{{ formatAmount(p.amount) }}</span>
+      </div>
+    </div>
+
+    <div class="empty" *ngIf="financeStats.payments.length === 0">
+      No hay pagos registrados para el período seleccionado
+    </div>
+  </div>
+</div>

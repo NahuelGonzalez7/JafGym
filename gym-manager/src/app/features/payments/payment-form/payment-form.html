@@ -1,0 +1,107 @@
+<div class="form">
+  <div class="form__header">
+    <h2>Registrar pago</h2>
+    <button class="btn-close" (click)="cancel.emit()">✕</button>
+  </div>
+
+  <div class="form__body">
+
+    <!-- Alumno -->
+    <div class="field">
+      <label>Alumno *</label>
+      <div class="autocomplete">
+        <input
+          type="text"
+          [(ngModel)]="studentSearch"
+          (ngModelChange)="searchStudents()"
+          (focus)="searchStudents()"
+          placeholder="Buscar por nombre o DNI..."
+          [class.input--error]="errors['student']"
+        />
+        <div class="dropdown" *ngIf="showStudentDropdown && filteredStudents.length > 0">
+          <div
+            class="dropdown__item"
+            *ngFor="let s of filteredStudents"
+            (click)="selectStudent(s)">
+            <span>{{ s.first_name }} {{ s.last_name }}</span>
+            <small>{{ s.dni }}</small>
+          </div>
+        </div>
+      </div>
+      <span class="field-error" *ngIf="errors['student']">{{ errors['student'] }}</span>
+    </div>
+
+    <!-- Membresías -->
+    <div class="field">
+      <label>Membresía *</label>
+      <div class="membership-options">
+        <div
+          class="membership-card"
+          *ngFor="let m of memberships"
+          (click)="selectMembership(m)"
+          [class.membership-card--selected]="selectedMembership?.id === m.id">
+          <span class="membership-card__name">{{ m.name }}</span>
+          <span class="membership-card__days">{{ m.duration_days }} días</span>
+          <span class="membership-card__price">${{ m.price | number }}</span>
+        </div>
+      </div>
+      <span class="field-error" *ngIf="errors['membership']">{{ errors['membership'] }}</span>
+    </div>
+
+    <div class="form-grid">
+      <!-- Monto -->
+      <div class="field">
+        <label>Monto *</label>
+        <input
+          type="number"
+          [(ngModel)]="form.amount"
+          placeholder="0"
+          [class.input--error]="errors['amount']"
+        />
+        <span class="field-error" *ngIf="errors['amount']">{{ errors['amount'] }}</span>
+      </div>
+
+      <!-- Fecha pago -->
+      <div class="field">
+        <label>Fecha de pago *</label>
+        <input
+          type="date"
+          [(ngModel)]="form.paid_at"
+          [class.input--error]="errors['paid_at']"
+        />
+        <span class="field-error" *ngIf="errors['paid_at']">{{ errors['paid_at'] }}</span>
+      </div>
+
+      <!-- Válido desde -->
+      <div class="field">
+        <label>Válido desde *</label>
+        <input
+          type="date"
+          [(ngModel)]="form.valid_from"
+          [class.input--error]="errors['valid_from']"
+        />
+        <span class="field-error" *ngIf="errors['valid_from']">{{ errors['valid_from'] }}</span>
+      </div>
+
+      <!-- Válido hasta (calculado) -->
+      <div class="field">
+        <label>Válido hasta</label>
+        <div class="computed-field">{{ getValidUntil() }}</div>
+      </div>
+    </div>
+
+    <!-- Notas -->
+    <div class="field">
+      <label>Notas</label>
+      <input type="text" [(ngModel)]="form.notes" placeholder="Opcional..." />
+    </div>
+
+    <div class="form__actions">
+      <button class="btn-primary" (click)="save()" [disabled]="loading">
+        {{ loading ? 'Guardando...' : 'Registrar pago' }}
+      </button>
+      <button class="btn-ghost" (click)="cancel.emit()">Cancelar</button>
+    </div>
+
+  </div>
+</div>

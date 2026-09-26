@@ -1,0 +1,47 @@
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar__top">
+      <a class="brand" routerLink="/">
+        <span class="brand__icon">⚡</span>
+        <span class="brand__name">JafGym</span>
+      </a>
+
+      <nav class="nav">
+        <a
+          class="nav__item"
+          routerLink="/"
+          routerLinkActive="nav__item--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <span class="nav__icon">🏠</span>
+          <span>Inicio</span>
+        </a>
+        <a class="nav__item" routerLink="/students" routerLinkActive="nav__item--active">
+          <span class="nav__icon">👤</span>
+          <span>Alumnos</span>
+        </a>
+        <a class="nav__item" routerLink="/payments" routerLinkActive="nav__item--active">
+          <span class="nav__icon">💳</span>
+          <span>Pagos</span>
+        </a>
+        <a class="nav__item" routerLink="/stats" routerLinkActive="nav__item--active">
+          <span class="nav__icon">📊</span>
+          <span>Estadísticas</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="sidebar__bottom">
+      <button class="kiosk-btn" (click)="openKiosk()">
+        <span>⊕</span>
+        <span>Modo asistencia</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-toast></app-toast>
+</div>

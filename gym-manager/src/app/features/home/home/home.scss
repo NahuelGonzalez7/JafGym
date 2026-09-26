@@ -1,0 +1,188 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 860px;
+
+  &__header {
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #F0F0F0;
+    }
+  }
+}
+
+.date {
+  font-size: 13px;
+  color: #6B6B6B;
+  margin-top: 4px;
+  text-transform: capitalize;
+}
+
+// ── Cards ───────────────────────────────────────────────
+.cards {
+  display: flex;
+  gap: 16px;
+}
+
+.card {
+  flex: 1;
+  background: #141414;
+  border: 1px solid #2A2A2A;
+  border-radius: 8px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &--warning { border-color: rgba(234, 179, 8, 0.4); }
+  &--danger  { border-color: rgba(212, 43, 43, 0.4); }
+
+  &__label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6B6B6B;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #F0F0F0;
+    line-height: 1;
+    margin: 4px 0;
+  }
+
+  &__sub {
+    font-size: 12px;
+    color: #6B6B6B;
+  }
+}
+
+// ── Section ─────────────────────────────────────────────
+.section__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6B6B6B;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+// ── Student list ────────────────────────────────────────
+.student-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.student-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #141414;
+  border: 1px solid #2A2A2A;
+  border-radius: 6px;
+  transition: border-color 0.15s;
+
+  &--warning { border-left: 3px solid #EAB308; }
+  &--expired { border-left: 3px solid #D42B2B; }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #F0F0F0;
+  }
+
+  &__status {
+    font-size: 12px;
+    color: #6B6B6B;
+  }
+
+  &--warning &__status { color: #EAB308; }
+  &--expired &__status { color: #D42B2B; }
+
+  &__action {
+    font-size: 12px;
+    font-weight: 600;
+    color: #D42B2B;
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid #2A2A2A;
+    border-radius: 4px;
+    transition: background 0.15s, border-color 0.15s;
+
+    &:hover {
+      background: rgba(212, 43, 43, 0.08);
+      border-color: #D42B2B;
+    }
+  }
+}
+
+// ── Empty state ─────────────────────────────────────────
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px;
+  color: #6B6B6B;
+  font-size: 13px;
+
+  span { font-size: 24px; color: #1E7A45; }
+}
+
+.loading {
+  color: #6B6B6B;
+  font-size: 13px;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #141414;
+  border: 1px solid #2A2A2A;
+  border-radius: 6px;
+  color: #ADADAD;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+
+  span:first-child {
+    font-size: 16px;
+    color: #D42B2B;
+  }
+
+  &:hover {
+    border-color: #D42B2B;
+    color: #F0F0F0;
+  }
+}
+
+.card--clickable {
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s;
+
+  &:hover {
+    border-color: #D42B2B;
+    transform: translateY(-2px);
+  }
+}

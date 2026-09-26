@@ -1,0 +1,92 @@
+<div
+  class="kiosko"
+  [class.kiosko--success]="state === 'success'"
+  [class.kiosko--expired]="state === 'expired'"
+  [class.kiosko--notfound]="state === 'notfound' || state === 'error'"
+>
+  <div class="kiosko__brand">
+    <span>⚡</span>
+    <span>GymManager</span>
+  </div>
+
+  <!-- IDLE / LOADING -->
+  <div class="kiosko__main" *ngIf="state === 'idle' || state === 'loading'">
+    <h1>Ingresá tu DNI</h1>
+    <p class="kiosko__sub">para registrar tu asistencia</p>
+
+    <div class="dni-field">
+      <input
+        id="dni-input"
+        type="text"
+        [(ngModel)]="dni"
+        placeholder="12345678"
+        maxlength="10"
+        [disabled]="state === 'loading'"
+        (keyup.enter)="search()"
+        autocomplete="off"
+      />
+      <button
+        class="btn-confirm"
+        (click)="search()"
+        [disabled]="state === 'loading' || dni.length < 7"
+      >
+        {{ state === 'loading' ? '...' : '→' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="kiosko__result" *ngIf="state === 'success' || state === 'expired'">
+    <div class="result-avatar">
+      <img *ngIf="student?.photo_url" [src]="student!.photo_url" />
+      <span *ngIf="!student?.photo_url">👤</span>
+    </div>
+
+    <div class="result-icon" [class.result-icon--expired]="state === 'expired'">
+      {{ state === 'success' ? '✓' : '⚠' }}
+    </div>
+
+    <h2>{{ student?.first_name }} {{ student?.last_name }}</h2>
+
+    <p class="result-status result-status--ok" *ngIf="state === 'success'">Bienvenido/a</p>
+    <p class="result-status result-status--expired" *ngIf="state === 'expired'">
+      Cuota vencida — hablá con recepción
+    </p>
+
+    <div class="result-details">
+      <div class="result-detail" *ngIf="student?.membership_name">
+        <span class="result-detail__label">Plan</span>
+        <span class="result-detail__value">{{ student?.membership_name }}</span>
+      </div>
+      <div class="result-detail" *ngIf="student?.valid_until">
+        <span class="result-detail__label">
+          {{ state === 'expired' ? 'Venció el' : 'Válido hasta' }}
+        </span>
+        <span
+          class="result-detail__value"
+          [class.result-detail__value--expired]="state === 'expired'"
+        >
+          {{ formatDate(student!.valid_until!) }}
+        </span>
+      </div>
+      <div class="result-detail">
+        <span class="result-detail__label">Próxima clase</span>
+        <span class="result-detail__value result-detail__value--muted"> Próximamente </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOT FOUND -->
+  <div class="kiosko__result" *ngIf="state === 'notfound'">
+    <div class="result-icon result-icon--notfound">✕</div>
+    <h2>DNI no encontrado</h2>
+    <p class="result-status result-status--notfound">Verificá el número o hablá con recepción</p>
+  </div>
+
+  <!-- ERROR -->
+  <div class="kiosko__result" *ngIf="state === 'error'">
+    <div class="result-icon result-icon--notfound">!</div>
+    <h2>Error de conexión</h2>
+    <p class="result-status result-status--notfound">Intentá de nuevo</p>
+  </div>
+</div>

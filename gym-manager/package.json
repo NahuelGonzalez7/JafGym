@@ -1,0 +1,87 @@
+{
+  "name": "gym-manager",
+  "version": "0.0.0",
+  "scripts": {
+    "set-env": "node scripts/set-env.js",
+    "start": "npm run set-env && ng serve",
+    "electron:dev": "npm run set-env && tsc -p electron/tsconfig.json && concurrently \"ng serve\" \"wait-on http://localhost:4200 && electron .\"",
+    "electron:build": "npm run set-env && ng build && tsc -p electron/tsconfig.json && electron-builder build --win",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "build": {
+    "appId": "com.jafgym.gymmanager",
+    "productName": "GymManager",
+    "copyright": "Copyright © 2025",
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "GymManager"
+    },
+    "files": [
+      "electron-dist/**/*",
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "NahuelGonzalez7",
+      "repo": "jafgym"
+    }
+  },
+  "main": "electron-dist/main.js",
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^20.2.0",
+    "@angular/compiler": "^20.2.0",
+    "@angular/core": "^20.2.0",
+    "@angular/forms": "^20.2.0",
+    "@angular/platform-browser": "^20.2.0",
+    "@angular/platform-browser-dynamic": "^20.0.7",
+    "@angular/router": "^20.2.0",
+    "@supabase/supabase-js": "^2.112.3",
+    "dotenv": "^18.0.4",
+    "electron-updater": "^6.8.9",
+    "primeflex": "^4.0.0",
+    "primeicons": "^8.0.0",
+    "primeng": "^20.4.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.2.0",
+    "@angular/cli": "^20.2.0",
+    "@angular/compiler-cli": "^20.2.0",
+    "@types/jest": "^30.0.0",
+    "concurrently": "^10.0.5",
+    "electron": "^43.4.0",
+    "electron-builder": "^26.15.3",
+    "jest": "^30.5.1",
+    "jest-environment-jsdom": "^30.5.1",
+    "jest-preset-angular": "^17.0.0",
+    "typescript": "~5.9.2",
+    "wait-on": "^9.1.0"
+  }
+}
