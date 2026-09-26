@@ -50,3 +50,5 @@ src/environments/environment.prod.ts
 
 
 /release
+
+*.zip
