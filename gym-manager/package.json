@@ -1,6 +1,6 @@
 {
   "name": "gym-manager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "set-env": "node scripts/set-env.js",
     "start": "npm run set-env && ng serve",
@@ -29,6 +29,12 @@
       "dist/**/*",
       "node_modules/**/*",
       "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "dist",
+        "to": "dist"
+      }
     ],
     "directories": {
       "output": "release"

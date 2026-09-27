@@ -23,13 +23,11 @@ function createMainWindow() {
   if (!app.isPackaged) {
     mainWindow.loadURL('http://localhost:4200');
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../dist/gym-manager/browser/index.html'));
+    mainWindow.loadFile(path.join(process.resourcesPath, 'dist/gym-manager/browser/index.html'));
   }
 
   mainWindow.webContents.openDevTools();
 }
-
-
 
 function createKioskWindow() {
   // Si ya está abierta, la enfocamos en vez de abrir otra
@@ -54,7 +52,7 @@ function createKioskWindow() {
   if (!app.isPackaged) {
     kioskWindow.loadURL('http://localhost:4200/kiosko');
   } else {
-    kioskWindow.loadFile(path.join(__dirname, '../dist/gym-manager/browser/index.html'), {
+    kioskWindow.loadFile(path.join(process.resourcesPath, 'dist/gym-manager/browser/index.html'), {
       hash: '/kiosko',
     });
   }
@@ -90,5 +88,3 @@ function setupAutoUpdater() {
     mainWindow.webContents.send('update-downloaded');
   });
 }
-
-
