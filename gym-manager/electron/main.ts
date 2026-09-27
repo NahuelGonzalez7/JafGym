@@ -25,6 +25,8 @@ function createMainWindow() {
   } else {
     mainWindow.loadFile(path.join(__dirname, '../dist/gym-manager/browser/index.html'));
   }
+
+  mainWindow.webContents.openDevTools();
 }
 
 
