@@ -1,12 +1,12 @@
 {
   "name": "gym-manager",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "set-env": "node scripts/set-env.js",
     "start": "npm run set-env && ng serve",
     "electron:dev": "npm run set-env && tsc -p electron/tsconfig.json && concurrently \"ng serve\" \"wait-on http://localhost:4200 && electron .\"",
-    "electron:build": "npm run set-env && ng build && tsc -p electron/tsconfig.json && electron-builder build --win",
-    "electron:publish": "npm run set-env && ng build && tsc -p electron/tsconfig.json && electron-builder build --win --publish always",
+    "electron:build": "npm run set-env && ng build --base-href ./ && tsc -p electron/tsconfig.json && electron-builder build --win",
+    "electron:publish": "npm run set-env && ng build --base-href ./ && tsc -p electron/tsconfig.json && electron-builder build --win --publish always",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
