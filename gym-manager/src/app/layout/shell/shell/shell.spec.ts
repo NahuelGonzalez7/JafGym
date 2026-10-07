@@ -11,8 +11,16 @@ describe('ShellComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ShellComponent, RouterModule.forRoot([])],
       providers: [
-        { provide: ElectronService, useValue: { openKiosk: jest.fn(), isElectron: jest.fn() } }
-      ]
+        {
+          provide: ElectronService,
+          useValue: {
+            openKiosk: jest.fn(),
+            isElectron: jest.fn(),
+            onUpdateAvailable: jest.fn(),
+            onUpdateDownloaded: jest.fn(),
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ShellComponent);

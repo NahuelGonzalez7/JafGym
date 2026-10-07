@@ -6,53 +6,80 @@
     </div>
   </div>
 
+  <div class="loading" *ngIf="loading"><p>Cargando...</p></div>
+
   <div class="cards" *ngIf="!loading">
     <div class="card card--clickable" routerLink="/students">
-      <span class="card__label">Alumnos activos</span>
+      <span class="card__label">Activos</span>
       <span class="card__value">{{ stats.activeStudents }}</span>
-      <span class="card__sub">registrados en total</span>
+      <span class="card__sub">alumnos registrados</span>
     </div>
-
     <div class="card card--clickable" routerLink="/students">
       <span class="card__label">Al día</span>
       <span class="card__value">{{ stats.upToDateStudents }}</span>
       <span class="card__sub">cuotas vigentes</span>
     </div>
-
+    <div class="card card--warning card--clickable" routerLink="/students">
+      <span class="card__label">Por vencer</span>
+      <span class="card__value">{{ stats.expiringCount }}</span>
+      <span class="card__sub">en los próximos 7 días</span>
+    </div>
+    <div class="card card--danger card--clickable" routerLink="/students">
+      <span class="card__label">Vencidos</span>
+      <span class="card__value">{{ stats.expiredCount }}</span>
+      <span class="card__sub">cuotas sin renovar</span>
+    </div>
     <div class="card">
       <span class="card__label">Ingresos hoy</span>
       <span class="card__value">{{ stats.totalToday }}</span>
       <span class="card__sub">personas ingresaron</span>
     </div>
+  </div>
 
-    <div
-      class="card card--warning card--clickable"
-      routerLink="/students"
-      *ngIf="stats.expiringCount > 0"
-    >
-      <span class="card__label">Por vencer</span>
-      <span class="card__value">{{ stats.expiringCount }}</span>
-      <span class="card__sub">cuotas en 7 días</span>
-    </div>
-
-    <div
-      class="card card--danger card--clickable"
-      routerLink="/students"
-      *ngIf="stats.expiredCount > 0"
-    >
-      <span class="card__label">Vencidas</span>
-      <span class="card__value">{{ stats.expiredCount }}</span>
-      <span class="card__sub">cuotas sin renovar</span>
+  <!-- Pagos del día -->
+  <div class="section-row" *ngIf="!loading">
+    <div class="payment-summary">
+      <div class="payment-summary__header">
+        <span class="section__title">Pagos de hoy</span>
+        <a class="section__link" routerLink="/payments">Ver todos →</a>
+      </div>
+      <div class="payment-summary__body">
+        <div class="payment-stat">
+          <span class="payment-stat__value">{{ stats.todayPayments }}</span>
+          <span class="payment-stat__label">pagos registrados</span>
+        </div>
+        <div class="payment-stat payment-stat--income">
+          <span class="payment-stat__value">{{ formatAmount(stats.todayIncome) }}</span>
+          <span class="payment-stat__label">cobrado hoy</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="quick-actions">
+  <!-- Cumpleaños -->
+  <div class="section" *ngIf="!loading && upcomingBirthdays.length > 0">
+    <h2 class="section__title">🎂 Próximos cumpleaños</h2>
+    <div class="birthday-list">
+      <div
+        class="birthday-row"
+        *ngFor="let b of upcomingBirthdays"
+        [class.birthday-row--today]="b.daysUntil === 0"
+      >
+        <span class="birthday-row__name"> {{ b.first_name }} {{ b.last_name }} </span>
+        <span class="birthday-row__days">{{ birthdayLabel(b.daysUntil) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acciones rápidas -->
+  <div class="quick-actions" *ngIf="!loading">
     <button class="action-btn" (click)="showManualModal = true">
       <span>+</span>
       <span>Registrar asistencia</span>
     </button>
   </div>
 
+  <!-- Cuotas a atender -->
   <div class="section" *ngIf="!loading && expiringStudents.length > 0">
     <h2 class="section__title">Cuotas a atender</h2>
     <div class="student-list">
@@ -74,10 +101,6 @@
   <div class="empty" *ngIf="!loading && expiringStudents.length === 0">
     <span>✓</span>
     <p>Todas las cuotas están al día</p>
-  </div>
-
-  <div class="loading" *ngIf="loading">
-    <p>Cargando...</p>
   </div>
 
   <app-manual-attendance-modal
