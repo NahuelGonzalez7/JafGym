@@ -1,6 +1,6 @@
 {
   "name": "gym-manager",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "scripts": {
     "set-env": "node scripts/set-env.js",
     "start": "npm run set-env && ng serve",
@@ -23,6 +23,10 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "GymManager"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
     },
     "files": [
       "electron-dist/**/*",

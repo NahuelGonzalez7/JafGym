@@ -4,10 +4,9 @@
   [class.kiosko--expired]="state === 'expired'"
   [class.kiosko--notfound]="state === 'notfound' || state === 'error'"
 >
-  <div class="kiosko__brand">
-    <span>⚡</span>
-    <span>GymManager</span>
-  </div>
+<div class="kiosko__brand">
+  <span>JafGym</span>
+</div>
 
   <!-- IDLE / LOADING -->
   <div class="kiosko__main" *ngIf="state === 'idle' || state === 'loading'">
