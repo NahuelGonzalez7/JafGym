@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import * as path from 'path';
 import { autoUpdater } from 'electron-updater';
 
@@ -80,31 +80,26 @@ app.on('window-all-closed', () => {
 });
 
 function setupAutoUpdater() {
-  // Logging para debug
-  autoUpdater.logger = require('electron-log');
-  (autoUpdater.logger as any).transports.file.level = 'info';
-
-  autoUpdater.checkForUpdatesAndNotify();
-
   autoUpdater.on('checking-for-update', () => {
-    console.log('Checking for update...');
+    dialog.showMessageBox({ message: 'Chequeando actualizaciones...' });
   });
 
   autoUpdater.on('update-available', (info) => {
-    console.log('Update available:', info);
+    dialog.showMessageBox({ message: `Update disponible: ${JSON.stringify(info)}` });
     mainWindow.webContents.send('update-available');
   });
 
   autoUpdater.on('update-not-available', (info) => {
-    console.log('Update not available:', info);
+    dialog.showMessageBox({ message: `No hay update. Versión actual: ${JSON.stringify(info)}` });
   });
 
   autoUpdater.on('error', (err) => {
-    console.log('Error in auto-updater:', err);
+    dialog.showMessageBox({ message: `Error: ${err.message}` });
   });
 
   autoUpdater.on('update-downloaded', () => {
-    console.log('Update downloaded');
     mainWindow.webContents.send('update-downloaded');
   });
+
+  autoUpdater.checkForUpdatesAndNotify();
 }
