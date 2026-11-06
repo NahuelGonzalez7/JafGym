@@ -80,13 +80,31 @@ app.on('window-all-closed', () => {
 });
 
 function setupAutoUpdater() {
+  // Logging para debug
+  autoUpdater.logger = require('electron-log');
+  (autoUpdater.logger as any).transports.file.level = 'info';
+
   autoUpdater.checkForUpdatesAndNotify();
 
-  autoUpdater.on('update-available', () => {
+  autoUpdater.on('checking-for-update', () => {
+    console.log('Checking for update...');
+  });
+
+  autoUpdater.on('update-available', (info) => {
+    console.log('Update available:', info);
     mainWindow.webContents.send('update-available');
   });
 
+  autoUpdater.on('update-not-available', (info) => {
+    console.log('Update not available:', info);
+  });
+
+  autoUpdater.on('error', (err) => {
+    console.log('Error in auto-updater:', err);
+  });
+
   autoUpdater.on('update-downloaded', () => {
+    console.log('Update downloaded');
     mainWindow.webContents.send('update-downloaded');
   });
 }
