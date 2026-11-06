@@ -1,12 +1,20 @@
 const fs = require('fs');
 require('dotenv').config();
 
-const envFile = `export const environment = {
+// environment.ts para Angular
+const angularEnvFile = `export const environment = {
   production: false,
   supabaseUrl: '${process.env.SUPABASE_URL}',
   supabaseKey: '${process.env.SUPABASE_ANON_KEY}'
 };
 `;
+fs.writeFileSync('./src/environments/environment.ts', angularEnvFile);
+console.log('✅ environment.ts (Angular) generado correctamente');
 
-fs.writeFileSync('./src/environments/environment.ts', envFile);
-console.log('✅ environment.ts generado correctamente');
+// environment.ts para Electron
+const electronEnvFile = `export const environment = {
+  ghToken: '${process.env.GH_TOKEN || ''}'
+};
+`;
+fs.writeFileSync('./electron/environment.ts', electronEnvFile);
+console.log('✅ environment.ts (Electron) generado correctamente');

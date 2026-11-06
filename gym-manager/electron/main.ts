@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import * as path from 'path';
 import { autoUpdater } from 'electron-updater';
+import { environment } from './environment';
 
 let mainWindow: BrowserWindow;
 let kioskWindow: BrowserWindow | null = null;
@@ -79,12 +80,19 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
+
 function setupAutoUpdater() {
-  autoUpdater.on('checking-for-update', () => {
+  if (environment.ghToken) {
+    autoUpdater.requestHeaders = {
+      Authorization: `token ${environment.ghToken}`
+    };
+  }
+
+    autoUpdater.on('checking-for-update', () => {
     dialog.showMessageBox({ message: 'Chequeando actualizaciones...' });
   });
 
-  autoUpdater.on('update-available', (info) => {
+    autoUpdater.on('update-available', (info) => {
     dialog.showMessageBox({ message: `Update disponible: ${JSON.stringify(info)}` });
     mainWindow.webContents.send('update-available');
   });
@@ -101,5 +109,22 @@ function setupAutoUpdater() {
     mainWindow.webContents.send('update-downloaded');
   });
 
+
   autoUpdater.checkForUpdatesAndNotify();
+
+  autoUpdater.on('update-available', (info) => {
+    mainWindow.webContents.send('update-available');
+  });
+
+  autoUpdater.on('update-not-available', () => {
+    // sin update
+  });
+
+  autoUpdater.on('error', (err) => {
+    console.error('AutoUpdater error:', err);
+  });
+
+  autoUpdater.on('update-downloaded', () => {
+    mainWindow.webContents.send('update-downloaded');
+  });
 }

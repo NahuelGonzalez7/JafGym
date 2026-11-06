@@ -52,3 +52,5 @@ src/environments/environment.prod.ts
 /release
 
 *.zip
+
+electron/environment.ts
